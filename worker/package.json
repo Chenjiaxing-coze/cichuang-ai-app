@@ -1,0 +1,19 @@
+{
+  "name": "cichuang-ai-worker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "词创AI 后端（Cloudflare Workers + D1，0 成本）。本里程碑：手机验证码 dev 登录 + JWT。",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:init": "wrangler d1 execute cichuang-ai --file=./src/schema.sql",
+    "db:init:local": "wrangler d1 execute cichuang-ai --local --file=./src/schema.sql"
+  },
+  "dependencies": {
+    "hono": "^4.6.0"
+  },
+  "devDependencies": {
+    "wrangler": "^3.90.0"
+  }
+}

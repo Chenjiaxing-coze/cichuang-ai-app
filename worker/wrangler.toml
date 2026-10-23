@@ -1,0 +1,19 @@
+name = "cichuang-ai"
+main = "src/index.js"
+compatibility_date = "2024-09-23"
+workers_dev = true
+
+# 说明：生产密钥（JWT_SECRET / AES_KEY）务必用 `wrangler secret put` 设置强随机值（>=32 字节），
+# 不要写死在下方 [vars]。下方 [vars] 仅放非敏感的开关与 TTL。
+# 本地联调用 `wrangler dev` 时，会把 [vars] 注入为环境变量，可直接跑通。
+[vars]
+ALLOW_DEV_SMS = "true"
+NODE_ENV = "production"
+ACCESS_TOKEN_TTL_HOURS = "2"
+REFRESH_TOKEN_TTL_DAYS = "7"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "cichuang-ai"
+# 执行 `wrangler d1 create cichuang-ai` 后，把返回的 uuid 填到下面
+database_id = "REPLACE_WITH_YOUR_D1_ID"
