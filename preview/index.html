@@ -544,6 +544,10 @@ const API = {
 
   /* ── 统一请求（公开认证接口已豁免 HMAC 签名；file:// 环境无需 WebCrypto） ── */
   async request(method, path, body){
+    // 离线预览版：未配置后端地址时，认证类接口给出友好提示而非静默失败
+    if (!this.BASE_URL && typeof path === 'string' && path.startsWith('/api/')) {
+      return {success:false, msg:'离线预览版暂未接入后端，登录/社区功能需联网后开放', offline:true};
+    }
     method = method.toUpperCase();
     const headers = {'Content-Type':'application/json'};
     const tk = this.getToken(); if (tk) headers['Authorization'] = 'Bearer ' + tk;
@@ -776,7 +780,8 @@ async function sendSmsCode(){
   if(!/^1\d{10}$/.test(phone))return toast('请输入正确的11位手机号','warn');
   const btn=$('#btnSendCode');
   let sec=60;btn.disabled=true;btn.textContent=`重新获取(${sec}s)`;
-  await API.auth.sendSmsCode(phone);
+  const r=await API.auth.sendSmsCode(phone);
+  if(!r||!r.success){btn.disabled=false;btn.textContent='获取验证码';toast((r&&r.msg)||'发送失败','error');return;}
   toast('验证码已发送，请查收短信','success');
   const tm=setInterval(()=>{sec--;if(sec<=0){clearInterval(tm);btn.disabled=false;btn.textContent='获取验证码'}else btn.textContent=`重新获取(${sec}s)`},1000);
 }
