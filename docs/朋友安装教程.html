@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>词创AI · 安卓安装与使用教程</title>
+<style>
+  :root{
+    --cyan:#22d3ee; --purple:#a855f7; --bg:#0b0f1a; --card:#121829;
+    --line:rgba(255,255,255,.08); --txt:#e6edf6; --muted:#9fb0c8; --ok:#34d399; --warn:#fbbf24;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--txt); line-height:1.7; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:0 18px 60px}
+  .hero{
+    padding:54px 22px 40px;text-align:center;
+    background:radial-gradient(120% 120% at 50% 0%,rgba(168,85,247,.22),transparent 60%),
+               radial-gradient(120% 120% at 80% 20%,rgba(34,211,238,.18),transparent 55%);
+    border-bottom:1px solid var(--line);
+  }
+  .badge{display:inline-block;font-size:12px;letter-spacing:2px;color:var(--cyan);
+    border:1px solid rgba(34,211,238,.4);padding:4px 12px;border-radius:999px;margin-bottom:16px}
+  h1{font-size:30px;font-weight:800;letter-spacing:1px;
+    background:linear-gradient(90deg,var(--cyan),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--muted);margin-top:14px;font-size:15px}
+  .tagline{margin-top:18px;font-size:16px;color:var(--txt)}
+  .tagline b{color:var(--cyan)}
+  .section{margin-top:34px}
+  .section h2{font-size:20px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+  .section h2 .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple))}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 18px;margin-bottom:14px}
+  .step{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px dashed var(--line)}
+  .step:last-child{border-bottom:none}
+  .num{flex:0 0 30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-weight:800;color:#06121e;background:linear-gradient(135deg,var(--cyan),var(--purple))}
+  .step .t{font-weight:700;margin-bottom:4px}
+  .step .d{color:var(--muted);font-size:14px}
+  code{background:rgba(255,255,255,.07);padding:2px 7px;border-radius:6px;font-size:13px;color:var(--cyan)}
+  .how{background:linear-gradient(135deg,rgba(34,211,238,.10),rgba(168,85,247,.10));
+    border:1px solid rgba(34,211,238,.25);border-radius:16px;padding:20px;margin-top:8px}
+  .how .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px;font-size:14px}
+  .pill{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+  .arrow{color:var(--purple);font-weight:800}
+  .note{border-left:4px solid var(--warn);background:rgba(251,191,36,.08);padding:14px 16px;border-radius:0 12px 12px 0;margin-top:8px;font-size:14px;color:#fde9b8}
+  .note b{color:var(--warn)}
+  .safe{border-left:4px solid var(--cyan);background:rgba(34,211,238,.08);padding:14px 16px;border-radius:0 12px 12px 0;margin-top:8px;font-size:14px}
+  .dl{text-align:center;margin-top:10px}
+  .btn{display:inline-block;margin-top:12px;padding:13px 26px;border-radius:12px;font-weight:700;text-decoration:none;
+    color:#06121e;background:linear-gradient(135deg,var(--cyan),var(--purple));box-shadow:0 8px 30px rgba(34,211,238,.25)}
+  .btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line);box-shadow:none;margin-left:8px}
+  .faq .q{font-weight:700;margin-top:12px}
+  .faq .a{color:var(--muted);font-size:14px}
+  footer{margin-top:40px;text-align:center;color:var(--muted);font-size:12px}
+  @media print{body{background:#fff;color:#111}.hero{background:none;border-bottom:2px solid #ddd}
+    .card,.how{break-inside:avoid}.btn{display:none}}
+</style>
+</head>
+<body>
+  <header class="hero">
+    <div class="badge">词创AI · 自分发安装包</div>
+    <h1>词创AI 安装与使用教程</h1>
+    <p class="sub">内置 100 条专业提示词 · 复制给任意 AI 帮你干活</p>
+    <p class="tagline">装好就能用核心功能，<b>无需注册</b>；登录与社区功能将在联网正式版开启。</p>
+  </header>
+
+  <div class="wrap">
+
+    <section class="section">
+      <h2><span class="dot"></span>这是什么</h2>
+      <div class="card">
+        <p><b>词创AI</b> 是一个把「专业提示词」装进口袋的小工具。它内置了 <b>100 条</b>覆盖写作、运营、编程、设计、职场等场景的高质量提示词。</p>
+        <p style="margin-top:10px;color:var(--muted)">它<b>不内置 AI、也不需要联网</b>。正确用法是：在 App 里挑一条提示词 → 复制 → 粘贴到豆包 / 通义 / 文心 / ChatGPT 等<b>任意你常用的 AI</b> → 让它按提示词帮你完成任务。</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2><span class="dot"></span>核心用法（一句话）</h2>
+      <div class="how">
+        <div class="flow">
+          <span class="pill">① 在 App 选提示词</span>
+          <span class="arrow">→</span>
+          <span class="pill">② 点「复制」</span>
+          <span class="arrow">→</span>
+          <span class="pill">③ 粘贴到豆包/任意AI</span>
+          <span class="arrow">→</span>
+          <span class="pill">④ 让 AI 帮你执行</span>
+        </div>
+        <p style="margin-top:12px;color:var(--muted);font-size:14px">提示词里已写好角色、步骤与输出格式，复制即用，省去你自己琢磨怎么问 AI。</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2><span class="dot"></span>安装步骤（安卓）</h2>
+      <div class="card">
+        <div class="step">
+          <div class="num">1</div>
+          <div><div class="t">拿到安装包</div>
+          <div class="d">从分享给你的文件里找到 <code>词创AI-app-v1.0.apk</code>，或点页面底部「下载安装包」。文件约 3.3 MB。</div></div>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <div><div class="t">允许「未知来源」安装</div>
+          <div class="d">首次安装会提示风险。进入 <code>设置 → 安全（或「应用与通知」）</code>，打开「未知来源应用 / 允许以此来源安装」。这是安卓安装非应用商店 App 的常规操作，允许本次安装即可。</div></div>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <div><div class="t">安装并打开</div>
+          <div class="d">点击 APK → 安装 → 打开。首次打开稍等 1–2 秒加载界面。</div></div>
+        </div>
+        <div class="step">
+          <div class="num">4</div>
+          <div><div class="t">开始使用</div>
+          <div class="d">首页浏览 10 大分类，点开任意提示词 → 点「复制」即可得到完整提示词文本。</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2><span class="dot"></span>关于登录与社区（请先看）</h2>
+      <div class="note">
+        <b>当前为离线预览版：</b>「微信扫码登录」「手机验证码登录」与「社区发帖 / 评论」需要联网后端才能使用，将在后续正式版开启。<br/>
+        但<b>核心的「提示词浏览 + 复制」完全离线可用，不需要登录、不需要联网</b>——装好即可直接体验产品价值。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2><span class="dot"></span>安全说明</h2>
+      <div class="safe">
+        这是<b>自分发调试包（debug）</b>，由开发者签名，并非应用商店上架版本。请<b>仅从本开发者（信任来源）获取</b>安装包，不要随意转发给不认识的人。使用过程中不会上传你的任何内容到服务器（离线预览版无任何联网请求）。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2><span class="dot"></span>下载安装包</h2>
+      <div class="card dl">
+        <p style="color:var(--muted);font-size:14px">最稳妥：直接用开发者发给你的 <code>词创AI-app-v1.0.apk</code> 文件安装。</p>
+        <p style="color:var(--muted);font-size:14px;margin-top:6px">或点击下方公开链接下载（仓库公开，无需登录）：</p>
+        <a class="btn" href="https://github.com/Chenjiaxing-coze/cichuang-ai-app/releases/download/nightly/app-debug.apk">下载安卓安装包</a>
+        <a class="btn ghost" href="https://github.com/Chenjiaxing-coze/cichuang-ai-app/releases/tag/nightly">查看发布页</a>
+      </div>
+    </section>
+
+    <section class="section faq">
+      <h2><span class="dot"></span>常见问题</h2>
+      <div class="card">
+        <div class="q">装不上 / 提示「已阻止安装」？</div>
+        <div class="a">到「设置 → 安全」打开「未知来源应用」开关，再重试安装。</div>
+        <div class="q">提示词能用吗？需要联网吗？</div>
+        <div class="a">能，且完全离线。本版本不向任何服务器发请求。</div>
+        <div class="q">为什么点「登录」没反应 / 提示离线？</div>
+        <div class="a">因为本预览版尚未接入后端。登录与社区将在联网正式版开放，敬请期待。</div>
+        <div class="q">苹果手机能用吗？</div>
+        <div class="a">当前提供安卓安装包；鸿蒙 / iOS 版本后续推出。</div>
+      </div>
+    </section>
+
+    <footer>
+      词创AI · 离线预览版 v1.0 ｜ 自分发测试包 ｜ 仅供信任的朋友体验
+    </footer>
+  </div>
+</body>
+</html>
