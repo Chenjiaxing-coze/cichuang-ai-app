@@ -28,6 +28,10 @@ npm-debug.log*
 # ───── 可由源码重新生成的打包产物 ─────
 miaoda-package.zip
 
+# ───── WorkBuddy 临时产物 ─────
+*.genie
+.wbapp_*/
+
 # ───── OS / 编辑器 ─────
 .DS_Store
 Thumbs.db

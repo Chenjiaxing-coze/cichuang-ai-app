@@ -7,6 +7,7 @@ import { rateLimit } from './middleware/rateLimit.js';
 import authRouter from './routes/auth.js';
 import communityRouter from './routes/community.js';
 import syncRouter from './routes/sync.js';
+import wechatRouter, { wechatCallback } from './routes/wechat.js';
 
 const app = express();
 
@@ -18,11 +19,17 @@ app.use(rateLimit);
 
 app.get('/health', (req, res) => res.json({ ok: true, ts: Date.now() }));
 
+// 微信扫码登录回调：由微信开放平台在用户授权后 302 跳转到 redirect_uri，
+// 由用户浏览器发起，无法（也不应）携带本系统 HMAC 签名头；其安全性由一次性
+// 随机 state 保证（见 routes/wechat.js），故必须在签名守卫之前单独挂载。
+app.get('/api/auth/wechat/callback', wechatCallback);
+
 // 签名验签 + 防重放（作用于 /api 下所有接口）
 app.use('/api', signatureGuard);
 app.use('/api', attachUser);
 
 app.use('/api', authRouter);
+app.use('/api', wechatRouter);
 app.use('/api', communityRouter);
 app.use('/api', syncRouter);
 

@@ -35,6 +35,14 @@ export const config = {
     signName: process.env.ALIYUN_SMS_SIGN_NAME || '词创AI',
     templateCode: process.env.ALIYUN_SMS_TEMPLATE_CODE || ''
   },
+  // 微信扫码登录（微信开放平台「网站应用」OAuth，appid 为网站应用凭证）。
+  // 三个值均默认空串：未配置时 /api/auth/wechat/start 会明确提示「微信登录未配置」。
+  wechat: {
+    appid: process.env.WECHAT_APPID || '',
+    secret: process.env.WECHAT_SECRET || '',
+    // 必须与微信开放平台后台「授权回调域名」登记的一致，且为 https 完整回调地址
+    redirectUri: process.env.WECHAT_REDIRECT_URI || ''
+  },
   contentModeration: process.env.CONTENT_MODERATION || 'keyword',
   rateLimitPerMinute: Number(process.env.RATE_LIMIT_PER_MINUTE) || 60,
   // 是否信任前置代理写入的 X-Forwarded-For（CFC/反代后应开启，否则限流 IP 取错）。

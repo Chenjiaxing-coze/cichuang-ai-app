@@ -5,9 +5,13 @@ import { aesEncrypt, signAccessToken, signRefreshToken, verifyToken, maskPhone }
 import { sendSmsCode, verifySmsCode } from '../services/sms.js';
 import { writeAudit } from '../middleware/audit.js';
 import { smsRateLimit } from '../middleware/rateLimit.js';
+import { config } from '../config.js';
 
 const router = express.Router();
-const isDev = process.env.SMS_PROVIDER === 'dev';
+// 必须与 services/sms.js 的判断口径一致：以 config.sms.provider 为准（默认 'dev'）。
+// 注意：直接用 process.env.SMS_PROVIDER 判断会在「未设置该环境变量」时得到 false，
+// 而 config 默认回退为 'dev'，导致 /send 生成了验证码却不回传 devCode（自用联调失效）。
+const isDev = config.sms.provider === 'dev';
 
 function makeAppUser(user) {
   return { id: user.id, nickname: user.nickname, avatar: user.avatar, method: user.method, loginTime: Date.now() };

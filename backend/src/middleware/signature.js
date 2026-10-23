@@ -10,6 +10,9 @@ const TS_TOLERANCE = 300 * 1000; // 时间戳允许偏差 ±5 分钟
 function ts() { return Date.now(); }
 
 export function signatureGuard(req, res, next) {
+  // 公开认证入口（短信/微信 OAuth）豁免应用签名：客户端密钥本就内置，
+  // 且 WebView 以 file:// 加载时 WebCrypto 不可用，签名无意义；登录安全由 HTTPS+JWT+限流保障。
+  if (req.originalUrl.startsWith('/api/auth/')) return next();
   const tsHeader = req.headers['x-timestamp'];
   const nonce = req.headers['x-nonce'];
   const sign = req.headers['x-sign'];
