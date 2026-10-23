@@ -30,11 +30,11 @@ window.__APP_CONFIG__ = {
 
 ## 编译 APK
 1. 用 Android Studio 打开本 `android/` 目录。
-2. 等待 Gradle 同步完成（**AGP 版本已在 `settings.gradle` 的 `pluginManagement` 中声明为 8.5.2**，无需手动指定）。首次会下载依赖：AppCompat / WebKit / security-crypto。
+2. 等待 Gradle 同步完成（**AGP 版本已在 `settings.gradle` 的 `pluginManagement` 中声明为 8.5.2**，无需手动指定）。首次会下载依赖：AppCompat / WebKit。
 3. 配置签名：菜单 Build → Generate Signed Bundle / APK → 创建/选择 keystore（**release 包必须签名，否则无法安装**）。
 4. 选 release，输出 `app/release/app-release.apk`（arm64-v8a + armeabi-v7a 双架构默认包含）。
 
-> 本脚手架已开启 minify（代码混淆）+ 仅 HTTPS + EncryptedSharedPreferences 加密令牌，满足 v1.0 安全基线。
+> 本脚手架已开启 minify（代码混淆）+ 仅 HTTPS。v1.0 调试/自分发阶段端上令牌走私有 SharedPreferences；生产签名 release 包建议切换为 `androidx.security.crypto.EncryptedSharedPreferences` 以符合等保二级"加密存储敏感凭据"要求（见 `AppBridge.java` 注释与《等保二级合规对照与整改报告.md》）。
 
 ## 原生桥接说明
 `MainActivity` 通过 `addJavascriptInterface(new AppBridge(this), "__NATIVE__")` 注入原生存储：

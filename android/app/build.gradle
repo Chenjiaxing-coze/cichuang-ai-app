@@ -28,21 +28,10 @@ android {
     }
 }
 
-// 统一 Kotlin stdlib 版本：现代 kotlin-stdlib 已内置 jdk7/jdk8 类，
-// 但部分传递依赖会拉入老旧的 kotlin-stdlib-jdk7/jdk8（1.6.21），
-// 导致 checkDebugDuplicateClasses 报"重复类"。在此排除旧包并锁定到 1.8.x。
-configurations.all {
-    resolutionStrategy {
-        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
-        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
-    }
-}
-
+// v1.0 仅依赖 AndroidX 基础库（纯 Java，无 Kotlin/native 传递依赖），
+// 规避 kotlin-stdlib 重复类与 security-crypto/tink 原生库解析问题，保证可复现构建。
+// 生产环境如需加密存储令牌，在此添加 androidx.security:security-crypto 并同步改 AppBridge。
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.webkit:webkit:1.11.0'
-    // EncryptedSharedPreferences：使用稳定版 1.0.0（1.1.0-alpha06 为预览版，不建议生产）
-    implementation 'androidx.security:security-crypto:1.0.0'
-    // 显式锁定 Kotlin stdlib 版本（消除 jdk7/jdk8 旧包带来的重复类）
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
 }
