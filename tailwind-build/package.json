@@ -1,0 +1,12 @@
+{
+  "name": "cichuang-tailwind-build",
+  "version": "1.0.0",
+  "description": "词创AI H5 本地化 Tailwind 构建（离线不崩，不依赖 CDN）",
+  "scripts": {
+    "build": "tailwindcss -i ./input.css -o ../tailwind.css --minify",
+    "watch": "tailwindcss -i ./input.css -o ../tailwind.css --minify --watch"
+  },
+  "dependencies": {
+    "tailwindcss": "^3.4.13"
+  }
+}

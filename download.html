@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>词创AI · 免费下载（安卓 / 鸿蒙）</title>
+<style>
+  :root{
+    --bg:#081A2B; --bg2:#0F2940; --cyan:#22D3EE; --purple:#A855F7; --green:#10B981;
+    --text:#E6F0FA; --muted:#9FB4C9; --wechat:#07C160;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei",system-ui,sans-serif;
+    background:radial-gradient(1200px 600px at 70% -10%,rgba(34,211,238,.18),transparent),
+               radial-gradient(900px 500px at 10% 10%,rgba(168,85,247,.16),transparent),
+               var(--bg);
+    color:var(--text); min-height:100vh; padding:28px 16px 60px;
+  }
+  .wrap{max-width:760px;margin:0 auto}
+  .hero{text-align:center;padding:26px 0 10px}
+  .logo{font-size:34px;font-weight:800;letter-spacing:1px;
+    background:linear-gradient(90deg,var(--cyan),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .tag{display:inline-block;margin-top:10px;padding:5px 12px;border-radius:999px;
+    background:rgba(16,185,129,.15);color:var(--green);font-size:13px;border:1px solid rgba(16,185,129,.4)}
+  .sub{color:var(--muted);margin-top:14px;font-size:15px;line-height:1.7}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:26px}
+  @media(max-width:560px){.cards{grid-template-columns:1fr}}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:22px 18px;
+    display:flex;flex-direction:column;gap:10px;backdrop-filter:blur(6px)}
+  .card h3{font-size:19px;display:flex;align-items:center;gap:8px}
+  .card p{color:var(--muted);font-size:13px;line-height:1.6;min-height:54px}
+  .btn{margin-top:auto;text-align:center;text-decoration:none;font-weight:700;
+    padding:12px 14px;border-radius:12px;color:#04121f;background:linear-gradient(90deg,var(--cyan),var(--purple));
+    box-shadow:0 8px 24px -10px rgba(34,211,238,.6);transition:.2s}
+  .btn:hover{transform:translateY(-2px);opacity:.95}
+  .btn.disabled{background:rgba(255,255,255,.12);color:var(--muted);box-shadow:none;cursor:not-allowed}
+  .badge{font-size:12px;color:var(--muted)}
+  .steps{margin-top:30px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+    border-radius:16px;padding:20px}
+  .steps h2{font-size:18px;margin-bottom:12px}
+  .steps ol{margin-left:20px;color:var(--muted);font-size:14px;line-height:1.9}
+  .steps ol b{color:var(--text)}
+  .note{margin-top:18px;font-size:12px;color:var(--muted);line-height:1.7;border-top:1px dashed rgba(255,255,255,.15);padding-top:14px}
+  .secure{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+  .secure span{font-size:12px;padding:5px 10px;border-radius:8px;background:rgba(34,211,238,.1);
+    border:1px solid rgba(34,211,238,.3);color:var(--cyan)}
+  .qrcode{margin-top:18px;text-align:center}
+  .qrcode .box{display:inline-block;padding:12px;border-radius:14px;background:#fff}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div class="logo">词创AI</div>
+    <span class="tag">免费 · 无广告 · 支持安卓 / 鸿蒙</span>
+    <p class="sub">一句话生成小红书 / 短视频 / 电商文案与提示词。<br/>游客可用，手机号 / 微信登录后自动云端同步。</p>
+  </div>
+
+  <div class="secure">
+    <span>🔒 等保二级安全基线</span>
+    <span>🛡️ 接口签名防重放</span>
+    <span>🔑 令牌加密存储</span>
+    <span>📱 离线可用</span>
+  </div>
+
+  <div class="cards">
+    <!-- Android -->
+    <div class="card">
+      <h3>🤖 安卓 APK</h3>
+      <p>Android 7.0+（API 24）以上手机。自分发需允许「安装未知来源应用」。</p>
+      <!-- 构建后用真实下载链接替换 href；当前为本地构建产物占位路径 -->
+      <a class="btn" href="android/app/release/app-release.apk">下载安卓版</a>
+      <span class="badge">v1.0.0 · 约 3–5 MB</span>
+    </div>
+    <!-- HarmonyOS -->
+    <div class="card">
+      <h3>🌟 鸿蒙 HAP</h3>
+      <p>HarmonyOS NEXT（API 12）手机。通过「设置 → 系统 → 纯净模式」允许安装。</p>
+      <!-- 构建后用真实下载链接替换 href -->
+      <a class="btn" href="harmony/entry/build/outputs/entry-default-signed.hap">下载鸿蒙版</a>
+      <span class="badge">v1.0.0 · HAP / APP</span>
+    </div>
+  </div>
+
+  <div class="steps">
+    <h2>📲 安装指引</h2>
+    <ol>
+      <li><b>安卓</b>：下载后若提示「禁止安装」，进入 <b>设置 → 安全 → 安装未知来源应用</b>，对使用的浏览器/文件管理器授权，再点安装包继续。</li>
+      <li><b>鸿蒙</b>：下载后进入 <b>设置 → 系统 → 纯净模式（或“应用安装”）</b>，开启「允许安装未知来源应用」，再安装 HAP。</li>
+      <li>首次打开需联网完成「云端同步」；无网络时自动使用本地缓存（离线降级）。</li>
+      <li>登录手机号需接收短信验证码（由阿里云短信发送）。</li>
+    </ol>
+    <div class="note">
+      ⚠️ 本页面为 <b>v1.0 自分发渠道</b>，未上架应用商店。正式分发前请确认：
+      ① 已将 <code>app-config.js</code> 的 <code>API_BASE</code> 改为你的 HTTPS 后端域名；
+      ② 安卓 / 鸿蒙安装包已用正式签名；
+      ③ 后端已按《部署与运维安全手册》完成等保二级基线配置。
+      把上方两个按钮的 <code>href</code> 换成你的实际下载地址（或对象存储直链）即可对外分享。
+    </div>
+  </div>
+
+  <div class="note" style="text-align:center">
+    词创AI · 个人开发者作品 · 数据本地优先 + 加密云端同步 · 不收集无关信息
+  </div>
+</div>
+</body>
+</html>

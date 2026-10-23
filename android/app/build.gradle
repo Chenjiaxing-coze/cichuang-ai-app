@@ -1,0 +1,36 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.cichuang.ai'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.cichuang.ai"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // 注意：release 包必须配置签名（见 README）
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.webkit:webkit:1.11.0'
+    // EncryptedSharedPreferences：使用稳定版 1.0.0（1.1.0-alpha06 为预览版，不建议生产）
+    implementation 'androidx.security:security-crypto:1.0.0'
+}

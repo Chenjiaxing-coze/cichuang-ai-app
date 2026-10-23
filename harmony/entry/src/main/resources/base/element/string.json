@@ -1,0 +1,20 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "词创AI 鸿蒙端入口模块"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "词创AI 主Ability"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "词创AI"
+    },
+    {
+      "name": "perm_internet_reason",
+      "value": "需要访问云端后端（登录、社区、同步）"
+    }
+  ]
+}

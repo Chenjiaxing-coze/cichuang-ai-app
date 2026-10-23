@@ -1,0 +1,6 @@
+# ArkTS 混淆保留规则（release 构建生效）
+# 原生桥接类的方法会被 H5 通过 window.__NATIVE__ 按精确方法名调用，禁止混淆
+-keep class NativeBridge { *; }
+
+# 保留入口 Ability（以及被系统按名反射的组件）
+-keep class EntryAbility { *; }

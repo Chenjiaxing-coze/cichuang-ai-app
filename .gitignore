@@ -1,0 +1,35 @@
+# ───── 依赖（不入库）─────
+node_modules/
+backend/node_modules/
+tailwind-build/node_modules/
+
+# ───── 密钥与运行数据（绝不入库）─────
+backend/.env
+*.local
+.env
+.env.*
+
+# 本地 SQLite 运行库（生产用 MySQL，开发库不共享）
+backend/data/*.db
+backend/data/*.db-shm
+backend/data/*.db-wal
+
+# ───── 日志 ─────
+*.log
+npm-debug.log*
+
+# ───── 工作区内部（个人记忆/配置，勿共享）─────
+.workbuddy/
+
+# ───── 原始开发包（大体积，非源码）─────
+开发包/
+开发包补充完整版/
+
+# ───── 可由源码重新生成的打包产物 ─────
+miaoda-package.zip
+
+# ───── OS / 编辑器 ─────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

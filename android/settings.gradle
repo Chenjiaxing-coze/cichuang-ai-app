@@ -1,0 +1,22 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    // 在此声明 Android Gradle Plugin 版本，app/build.gradle 中不再写版本号
+    plugins {
+        id 'com.android.application' version '8.5.2'
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "CiChuangAI"
+include ':app'
