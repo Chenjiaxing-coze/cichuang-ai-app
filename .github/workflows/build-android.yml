@@ -10,6 +10,10 @@ name: Build Android APK (云端编译机)
 #   actions/checkout / setup-java / cache / upload-artifact  官方
 #   ubuntu-latest 已预装 Android SDK（含 cmdline-tools/latest 与 sdkmanager）
 #   Gradle 8.9 官方发行版（独立安装，确保可复现）
+#
+# ⚠️ 关键经验：GitHub Actions 中 `echo PATH >> $GITHUB_PATH` 只对【后续步骤】生效，
+#    同一步骤内立即调用该 PATH 下的命令会找不到；故每个使用 sdkmanager/gradle
+#    的步骤都在 run 开头用 `export PATH=...` 让本步 shell 立即可用。
 
 on:
   workflow_dispatch:        # 允许手动触发
@@ -70,10 +74,12 @@ jobs:
             rm -f cmdtools.zip
           fi
           echo "$SDK/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
+          export PATH="$SDK/cmdline-tools/latest/bin:$PATH"
           sdkmanager --version
 
       - name: 接受许可 + 安装 SDK 平台与构建工具（API 34）
         run: |
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
           yes | sdkmanager --licenses
           sdkmanager "platforms;android-34" "build-tools;34.0.0"
 
@@ -91,11 +97,15 @@ jobs:
           echo "$GRADLE_DIST_HOME/gradle-8.9/bin" >> "$GITHUB_PATH"
 
       - name: 校验 Gradle 版本
-        run: gradle --version
+        run: |
+          export PATH="$GRADLE_DIST_HOME/gradle-8.9/bin:$PATH"
+          gradle --version
 
       - name: 编译 Debug APK（在 android/ 目录执行）
         working-directory: android
-        run: gradle :app:assembleDebug --no-daemon
+        run: |
+          export PATH="$GRADLE_DIST_HOME/gradle-8.9/bin:$PATH"
+          gradle :app:assembleDebug --no-daemon
 
       - name: 上传 APK 到 Artifacts
         uses: actions/upload-artifact@v4
