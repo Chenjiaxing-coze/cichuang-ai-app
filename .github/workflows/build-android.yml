@@ -1,6 +1,6 @@
 name: Build Android APK (云端编译机)
 
-# 作用：在 GitHub 提供的云构建机上（已含 Ubuntu + 可装 Android SDK）
+# 作用：在 GitHub 提供的云构建机上（已含 Ubuntu + 预装 Android SDK）
 #       自动编译出 安卓 APK，无需你本机装 Android Studio。
 # 触发：推送 android/ 或本工作流到 main 时自动跑；也可在 Actions 页手动 Run workflow。
 # 产物：① Actions → Artifacts 里的 app-debug-apk；
@@ -8,8 +8,8 @@ name: Build Android APK (云端编译机)
 #
 # 安全/成熟选型（不含任何来路不明第三方脚本）：
 #   actions/checkout / setup-java / cache / upload-artifact  官方
-#   android-actions/setup-android                           高口碑社区 Action，装 SDK 并自动接受许可
-#   ubuntu-latest 自带 gh CLI，用于发布 Release
+#   ubuntu-latest 已预装 Android SDK（含 cmdline-tools/latest 与 sdkmanager）
+#   Gradle 8.9 官方发行版（独立安装，确保可复现）
 
 on:
   workflow_dispatch:        # 允许手动触发
@@ -52,17 +52,25 @@ jobs:
           restore-keys: |
             gradle-${{ runner.os }}-
 
-      # —— 缓存：Android SDK ——
-      - name: 缓存 Android SDK
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.ANDROID_HOME }}
-          key: android-sdk-${{ runner.os }}-api34-bt3400
-          restore-keys: |
-            android-sdk-${{ runner.os }}-
-
-      - name: 安装 Android SDK（含许可）
-        uses: android-actions/setup-android@v3
+      # —— 准备 Android SDK：优先复用 runner 预装，缺失则手动安装 cmdline-tools ——
+      # （说明：旧版 android-actions/setup-android@v3 写死执行 `sdkmanager tools`，
+      #  而新版 cmdline-tools 已废弃 `tools` 包名，导致构建失败；故改为下方稳健写法。）
+      - name: 准备 Android SDK（复用 runner 预装，缺失则手动安装 cmdline-tools）
+        run: |
+          set -e
+          SDK="$ANDROID_HOME"
+          echo "ANDROID_HOME=$SDK"
+          ls -la "$SDK" || true
+          if [ ! -x "$SDK/cmdline-tools/latest/bin/sdkmanager" ]; then
+            echo "未检测到 cmdline-tools/latest，手动安装…"
+            mkdir -p "$SDK/cmdline-tools"
+            curl -fsSL https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -o cmdtools.zip
+            unzip -q cmdtools.zip -d "$SDK/cmdline-tools"
+            mv "$SDK/cmdline-tools/cmdline-tools" "$SDK/cmdline-tools/latest"
+            rm -f cmdtools.zip
+          fi
+          echo "$SDK/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
+          sdkmanager --version
 
       - name: 接受许可 + 安装 SDK 平台与构建工具（API 34）
         run: |
@@ -109,7 +117,7 @@ jobs:
           gh release upload nightly "$APK" --clobber
 
 # ──────────────────────────────────────────────────────────────
-# 进阶（可选）：要出“正式签名 release 包”再发给朋友/上架，
+# 进阶（可选）：要出"正式签名 release 包"再发给朋友/上架，
 #   1) 本地用 keytool 生成 keystore；
 #   2) 在仓库 Settings → Secrets 添加：
 #        KEYSTORE_BASE64 / KEY_ALIAS / KEY_PASSWORD / KEYSTORE_PASSWORD
