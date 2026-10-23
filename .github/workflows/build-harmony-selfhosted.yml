@@ -1,0 +1,44 @@
+name: Build HarmonyOS HAP (自托管编译机 · 需 HarmonyOS SDK)
+
+# ⚠️ 重要说明（为什么不是普通 GitHub 公共 runner）：
+#   HarmonyOS 的 SDK（含 hvigor 构建链）是华为授权分发的，
+#   无法在 GitHub 公共 runner 上合法合规地自动下载安装。
+#   因此本工作流设计为「自托管 runner（self-hosted）」——
+#   即在一台【已经装好 DevEco / HarmonyOS SDK 的机器】上运行，
+#   例如：华为云 CodeArts 开发机、或你自己装了 DevEco 的电脑。
+#   官方、合规的鸿蒙云端编译方案见《云端构建说明.md》（AppGallery Connect 云端构建）。
+#
+# 适用：runner 标签设为 harmonyos（在 runner 的 _work 配置或 GitHub 仓库
+#       Settings → Actions → Runners 里注册一台自托管 runner 时指定）。
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+    paths:
+      - 'harmony/**'
+      - '.github/workflows/build-harmony-selfhosted.yml'
+
+jobs:
+  build-harmony:
+    runs-on: [self-hosted, harmonyos]
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      - name: 安装依赖（ohpm 拉取 hvigor 等）
+        working-directory: harmony
+        run: ohpm install
+
+      - name: 编译 HAP（debug）
+        working-directory: harmony
+        # 若已生成 hvigorw 则用 ./hvigorw，否则用 node 直跑 hvigor
+        run: |
+          if [ -f hvigorw ]; then ./hvigorw assembleHap; else node node_modules/hvigor/bin/hvigor.js assembleHap; fi
+
+      - name: 上传 HAP 产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: entry-hap
+          path: harmony/entry/build/outputs/**/*.hap
+          if-no-files-found: error

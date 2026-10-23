@@ -1,0 +1,119 @@
+name: Build Android APK (云端编译机)
+
+# 作用：在 GitHub 提供的云构建机上（已含 Ubuntu + 可装 Android SDK）
+#       自动编译出 安卓 APK，无需你本机装 Android Studio。
+# 触发：推送 android/ 或本工作流到 main 时自动跑；也可在 Actions 页手动 Run workflow。
+# 产物：① Actions → Artifacts 里的 app-debug-apk；
+#       ② 自动发布到 GitHub Release（tag: nightly），APK 作为资产可直接下载分享朋友。
+#
+# 安全/成熟选型（不含任何来路不明第三方脚本）：
+#   actions/checkout / setup-java / cache / upload-artifact  官方
+#   android-actions/setup-android                           高口碑社区 Action，装 SDK 并自动接受许可
+#   ubuntu-latest 自带 gh CLI，用于发布 Release
+
+on:
+  workflow_dispatch:        # 允许手动触发
+  push:
+    branches: [main, master]
+    paths:
+      - 'android/**'
+      - '.github/workflows/build-android.yml'
+
+permissions:
+  contents: write          # 允许 gh release 创建/上传产物
+
+env:
+  ANDROID_HOME: /usr/local/lib/android/sdk
+  GRADLE_USER_HOME: ${{ github.workspace }}/.gradle-home
+  GRADLE_DIST_HOME: ${{ github.workspace }}/gradle-dist
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      - name: 安装 JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # —— 缓存：Gradle 依赖 + Gradle 8.9 发行版 ——
+      - name: 缓存 Gradle 依赖与发行版
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ env.GRADLE_USER_HOME }}/caches
+            ${{ env.GRADLE_USER_HOME }}/notifications
+            ${{ env.GRADLE_DIST_HOME }}
+          key: gradle-${{ runner.os }}-${{ hashFiles('android/**/*.gradle*', 'android/**/gradle.properties', 'android/settings.gradle*') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      # —— 缓存：Android SDK ——
+      - name: 缓存 Android SDK
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.ANDROID_HOME }}
+          key: android-sdk-${{ runner.os }}-api34-bt3400
+          restore-keys: |
+            android-sdk-${{ runner.os }}-
+
+      - name: 安装 Android SDK（含许可）
+        uses: android-actions/setup-android@v3
+
+      - name: 接受许可 + 安装 SDK 平台与构建工具（API 34）
+        run: |
+          yes | sdkmanager --licenses
+          sdkmanager "platforms;android-34" "build-tools;34.0.0"
+
+      - name: 安装 Gradle 8.9（不依赖本地 wrapper，确保可复现）
+        run: |
+          if [ ! -d "$GRADLE_DIST_HOME/gradle-8.9" ]; then
+            echo "下载 Gradle 8.9 发行版…"
+            curl -fsSL https://services.gradle.org/distributions/gradle-8.9-bin.zip -o gradle.zip
+            mkdir -p "$GRADLE_DIST_HOME"
+            unzip -q gradle.zip -d "$GRADLE_DIST_HOME"
+            rm -f gradle.zip
+          else
+            echo "复用缓存中的 Gradle 8.9 发行版"
+          fi
+          echo "$GRADLE_DIST_HOME/gradle-8.9/bin" >> "$GITHUB_PATH"
+
+      - name: 校验 Gradle 版本
+        run: gradle --version
+
+      - name: 编译 Debug APK（在 android/ 目录执行）
+        working-directory: android
+        run: gradle :app:assembleDebug --no-daemon
+
+      - name: 上传 APK 到 Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-apk
+          path: android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: 发布到 GitHub Release（含 APK，供直接下载）
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          APK=$(ls android/app/build/outputs/apk/debug/*.apk | head -1)
+          echo "准备发布的 APK: $APK"
+          gh release create nightly "$APK" \
+            --title "词创AI 调试版 (nightly)" \
+            --notes "自动云端构建的可安装调试包。安卓安装需在「设置 → 安全」允许「未知来源」。" \
+            --prerelease || \
+          gh release upload nightly "$APK" --clobber
+
+# ──────────────────────────────────────────────────────────────
+# 进阶（可选）：要出“正式签名 release 包”再发给朋友/上架，
+#   1) 本地用 keytool 生成 keystore；
+#   2) 在仓库 Settings → Secrets 添加：
+#        KEYSTORE_BASE64 / KEY_ALIAS / KEY_PASSWORD / KEYSTORE_PASSWORD
+#   3) 把编译步骤改为 `gradle :app:assembleRelease`，
+#      并在 android/app/build.gradle 的 release 块读取这些 secret 签名。
+# 现阶段先发 debug 包给朋友试用即可，无需签名配置。
+# ──────────────────────────────────────────────────────────────
